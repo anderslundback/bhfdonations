@@ -1,7 +1,8 @@
 import axios from 'axios';
+const config = require('./config');
 
 const client = axios.create({
-    baseURL: 'https://api.justgiving.com/'
+    baseURL: config.BASE_URL
   });
 
 const request =  function(options) {

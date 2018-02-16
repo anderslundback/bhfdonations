@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import bhfLogo from './assets/images/bhflogo140x140.jpg';
+import bhfLogo from './assets/images/bhfLogo.jpg';
 import './App.css';
-import './config.js';
-import request from './request.js';
+import DonationHandler from './donationHandler';
+var _ = require('lodash');
+const config = require('./config');
 
 class App extends Component {
   constructor(props) {
@@ -10,10 +11,17 @@ class App extends Component {
     this.state = {
       error: null,
       isLoaded: false,
-      donations: [],
-      CHARITY_ID: 183092, // Charity ID, default: BHF
-      API_KEY: '' // Enter your API KEY here
     };
+  }
+
+  componentDidMount() {
+    DonationHandler.fetchDonations(config.API_KEY, config.CHARITY_ID)
+    .then((response) => {
+      this.setState({
+        donationData: response,
+        isLoaded: true
+      })
+    });
   }
 
   renderHeader() {
@@ -25,42 +33,45 @@ class App extends Component {
     )
   }
 
+  renderFooter() {
+    return (
+      <footer className="App-footer">Created by: Anders Lundback</footer>
+    )
+  }
+
   renderDonations() {
-    const { error, isLoaded, donations } = this.state;
-    if(error) {
+    const { error, isLoaded, donationData } = this.state;
+
+    if (error) {
       return <div>Error fetching donations: {error.message}</div>
     } else if (!isLoaded) {
       return <div>Loading donations...</div>;
     } else {
-      console.log(JSON.stringify(donations));
+        return (
+          donationData.donations.map(function(donation, index) {
+            return (
+              <li className="list-group-item" key={index}>
+                Amount: <span className="donationAmount">{donation.amount} {donation.currencyCode}</span><br />
+                <p className="lead">{donation.message}</p>
+                Donated by: {donation.donorDisplayName}
+              </li>
+            )
+          })
+        )
     }
   }
-
-  fetchDonations(apiKey, charityId) {
-    return request({
-      url: `/${apiKey}/v1/charity/${charityId}/donations`,
-      method: 'GET'
-    });
-  }
-  
-  componentDidMount() {
-    // To do: render donations elegantly, for now let's console log them
-    console.log(this.fetchDonations(this.state.API_KEY, this.state.CHARITY_ID));
-  }
-
 
   render() {
     return (
       <div className="App">
         {this.renderHeader()}
-
         <div className="card card-body">
           <div className="card-title"><h3>Latest donations</h3></div>
           <div className="card-text" id="donationResult">
-            {/* To do: Display donations here */}
             {this.renderDonations()}
           </div>
         </div>
+        {this.renderFooter()}
       </div>
     );
   }
