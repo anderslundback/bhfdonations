@@ -1,0 +1,26 @@
+.donationAmount {
+    font-size: large;
+}
+  
+.donation-container li {
+    display: inline-block;
+    list-style: none;
+}
+
+.donation-container {
+    height: 100%;
+    margin-bottom: 10px;
+}
+
+.donation-message {
+/* Message styles */
+}
+
+.donation-donator {
+/* Donator name styles */
+}
+
+.donation-donator-image {
+    max-width: 100px;
+    max-height: 100px;
+}

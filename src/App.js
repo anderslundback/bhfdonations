@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import bhfLogo from './assets/images/bhfLogo.jpg';
-import './App.css';
-import DonationHandler from './donationHandler';
-var _ = require('lodash');
-const config = require('./config');
+import './styles/App.css';
+import './styles/donation.css';
+import DonationHandler from './js/donationHandler';
+const config = require('./js/config');
 
 class App extends Component {
   constructor(props) {
@@ -28,16 +28,12 @@ class App extends Component {
     return (
       <header className="App-header">
         <img src={bhfLogo} className="App-logo" alt="logo" />
-        <h1 className="App-title">British Heart Foundation</h1>
+        <h1 className="App-title">British Heart Foundation donations</h1>
       </header>
     )
   }
 
-  renderFooter() {
-    return (
-      <footer className="App-footer">Created by: Anders Lundback</footer>
-    )
-  }
+  renderFooter() { return <footer className="App-footer">Created by: Anders Lundback</footer> }
 
   renderDonations() {
     const { error, isLoaded, donationData } = this.state;
@@ -50,11 +46,12 @@ class App extends Component {
         return (
           donationData.donations.map(function(donation, index) {
             return (
-              <li className="list-group-item" key={index}>
-                Amount: <span className="donationAmount">{donation.amount} {donation.currencyCode}</span><br />
-                <p className="lead">{donation.message}</p>
-                Donated by: {donation.donorDisplayName}
-              </li>
+              <div className="list-group-item donation-container" key={index}>
+                  <span className="donationAmount">{donation.amount} {donation.currencyCode}</span><br />
+                  <p className="donation-message">{donation.message}</p>
+                  <img className="donation-donator-image" alt="donator profile" src={donation.imageUrl}/>
+                  <p className="donation-donator"> {donation.donorDisplayName}</p>
+              </div>
             )
           })
         )
@@ -63,14 +60,9 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App-wrapper">
         {this.renderHeader()}
-        <div className="card card-body">
-          <div className="card-title"><h3>Latest donations</h3></div>
-          <div className="card-text" id="donationResult">
-            {this.renderDonations()}
-          </div>
-        </div>
+        {this.renderDonations()}
         {this.renderFooter()}
       </div>
     );
