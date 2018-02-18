@@ -3,7 +3,7 @@ import bhfLogo from './assets/images/bhfLogo.jpg';
 import './styles/App.css';
 import './styles/donation.css';
 import DonationHandler from './js/donationHandler';
-const config = require('./js/config');
+import config from './js/config';
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     DonationHandler.fetchDonations(config.API_KEY, config.CHARITY_ID)
     .then((response) => {
       this.setState({
